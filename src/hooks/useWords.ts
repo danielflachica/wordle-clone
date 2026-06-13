@@ -25,6 +25,7 @@ const useWords = () => {
           category: "wordle",
           language: "en",
           length: 5,
+          type: "uppercase",
           words: 1,
         },
       })
