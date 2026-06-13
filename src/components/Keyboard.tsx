@@ -47,7 +47,7 @@ const Keyboard = ({ spacing = "5px" }: Props) => {
             <IoEnterOutline />
           </Key>
           <Key>Z</Key>
-          <Key>S</Key>
+          <Key>X</Key>
           <Key>C</Key>
           <Key>V</Key>
           <Key>B</Key>
