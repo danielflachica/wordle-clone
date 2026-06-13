@@ -27,7 +27,7 @@ const App = () => {
 
         <Box h="100px">{/* Game Grid */}</Box>
 
-        <Keyboard />
+        <Keyboard disabled={isLoading} />
       </Box>
 
       <Footer />

@@ -4,9 +4,10 @@ import Key from "./Key";
 
 interface Props {
   spacing?: string | number;
+  disabled?: boolean;
 }
 
-const Keyboard = ({ spacing = "5px" }: Props) => {
+const Keyboard = ({ spacing = "5px", disabled = false }: Props) => {
   return (
     <Grid
       gap={spacing}
@@ -16,44 +17,44 @@ const Keyboard = ({ spacing = "5px" }: Props) => {
     >
       <GridItem>
         <HStack gap={spacing} justify="center">
-          <Key>Q</Key>
-          <Key>W</Key>
-          <Key>E</Key>
-          <Key>R</Key>
-          <Key>T</Key>
-          <Key>Y</Key>
-          <Key>U</Key>
-          <Key>I</Key>
-          <Key>O</Key>
-          <Key>P</Key>
+          <Key disabled={disabled}>Q</Key>
+          <Key disabled={disabled}>W</Key>
+          <Key disabled={disabled}>E</Key>
+          <Key disabled={disabled}>R</Key>
+          <Key disabled={disabled}>T</Key>
+          <Key disabled={disabled}>Y</Key>
+          <Key disabled={disabled}>U</Key>
+          <Key disabled={disabled}>I</Key>
+          <Key disabled={disabled}>O</Key>
+          <Key disabled={disabled}>P</Key>
         </HStack>
       </GridItem>
       <GridItem>
         <HStack gap={spacing} justify="center">
-          <Key>A</Key>
-          <Key>S</Key>
-          <Key>D</Key>
-          <Key>F</Key>
-          <Key>G</Key>
-          <Key>H</Key>
-          <Key>J</Key>
-          <Key>K</Key>
-          <Key>L</Key>
+          <Key disabled={disabled}>A</Key>
+          <Key disabled={disabled}>S</Key>
+          <Key disabled={disabled}>D</Key>
+          <Key disabled={disabled}>F</Key>
+          <Key disabled={disabled}>G</Key>
+          <Key disabled={disabled}>H</Key>
+          <Key disabled={disabled}>J</Key>
+          <Key disabled={disabled}>K</Key>
+          <Key disabled={disabled}>L</Key>
         </HStack>
       </GridItem>
       <GridItem>
         <HStack gap={spacing} justify="center">
-          <Key>
+          <Key disabled={disabled}>
             <IoEnterOutline />
           </Key>
-          <Key>Z</Key>
-          <Key>X</Key>
-          <Key>C</Key>
-          <Key>V</Key>
-          <Key>B</Key>
-          <Key>N</Key>
-          <Key>M</Key>
-          <Key>
+          <Key disabled={disabled}>Z</Key>
+          <Key disabled={disabled}>X</Key>
+          <Key disabled={disabled}>C</Key>
+          <Key disabled={disabled}>V</Key>
+          <Key disabled={disabled}>B</Key>
+          <Key disabled={disabled}>N</Key>
+          <Key disabled={disabled}>M</Key>
+          <Key disabled={disabled}>
             <IoBackspaceOutline />
           </Key>
         </HStack>
