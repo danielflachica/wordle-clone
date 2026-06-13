@@ -1,10 +1,11 @@
-import { Box, Center, Flex, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Spinner, Text } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { useState } from "react";
+import useWords from "./hooks/useWords";
 
 const App = () => {
-  const [word, setWord] = useState("");
+  const { words, error, isLoading } = useWords();
+  const word = words.length > 0 ? words[0].word : "";
 
   return (
     <Flex direction="column" minH="100vh">
@@ -12,7 +13,13 @@ const App = () => {
 
       <Box as="main" flex="1">
         <Center>
-          <Text>Word of the day: {word}</Text>
+          {error ? (
+            <Text color="red">{error}</Text>
+          ) : (
+            <Text>
+              Word: {isLoading && <Spinner size="sm" />} {word}
+            </Text>
+          )}
         </Center>
       </Box>
 
