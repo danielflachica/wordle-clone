@@ -3,6 +3,7 @@ import { Box, Center, Flex, Spinner, Text } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import useWords from "./hooks/useWords";
+import Keyboard from "./components/Keyboard";
 
 const App = () => {
   const [isSolved, setSolved] = useState(false);
@@ -23,6 +24,10 @@ const App = () => {
             </Text>
           )}
         </Center>
+
+        <Box h="100px">{/* Game Grid */}</Box>
+
+        <Keyboard />
       </Box>
 
       <Footer />
