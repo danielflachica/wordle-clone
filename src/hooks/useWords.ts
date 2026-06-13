@@ -22,6 +22,7 @@ const useWords = () => {
       .get("", {
         signal: controller.signal,
         params: {
+          category: "wordle",
           language: "en",
           length: 5,
           words: 1,
