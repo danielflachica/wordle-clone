@@ -2,10 +2,12 @@ import { Box, Center, Flex, Spinner, Text } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import useWords from "./hooks/useWords";
+import { useState } from "react";
 
 const App = () => {
+  const [isSolved, setSolved] = useState(false);
   const { words, error, isLoading } = useWords();
-  const word = words.length > 0 ? words[0].word : "";
+  const word = words.length > 0 ? words[0].word.toUpperCase() : "";
 
   return (
     <Flex direction="column" minH="100vh">
