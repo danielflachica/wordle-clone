@@ -4,7 +4,9 @@ import { ColorModeButton } from "@/components/ui/color-mode";
 const Navbar = () => {
   return (
     <HStack as="header" p={4} justifyContent="space-between">
-      <Heading as="h1">Wordle</Heading>
+      <Heading as="h1" marginLeft={2} fontSize="2xl">
+        Wordle
+      </Heading>
       <ColorModeButton />
     </HStack>
   );
