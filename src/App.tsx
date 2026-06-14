@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Toaster } from "@/components/ui/toaster";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Keyboard from "./components/Keyboard";
@@ -7,14 +7,16 @@ import GameGrid from "./components/GameGrid";
 import useGame from "./hooks/useGame";
 import useWords from "./hooks/useWords";
 import useKeyboardListener from "./hooks/useKeyboardListener";
+import useToastListener from "./hooks/useToastListener";
 
 const App = () => {
   const { words, error, isLoading } = useWords();
   const word = words.length > 0 ? words[0].word : "";
 
-  const { grid, handleKeyPress, isSolved, isGameOver } = useGame(word);
+  const { grid, handleKeyPress, isSolved, isGameOver, toast } = useGame(word);
 
   useKeyboardListener(handleKeyPress, isSolved || isGameOver);
+  useToastListener(toast);
 
   return (
     <Flex direction="column" minH="100vh">
@@ -44,6 +46,8 @@ const App = () => {
           onPress={handleKeyPress}
         />
       </Flex>
+
+      <Toaster />
 
       <Footer />
     </Flex>
