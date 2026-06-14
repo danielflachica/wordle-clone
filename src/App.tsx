@@ -2,22 +2,19 @@ import { useState } from "react";
 import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import useWords from "./hooks/useWords";
 import Keyboard from "./components/Keyboard";
 import GameGrid from "./components/GameGrid";
+import useGame from "./hooks/useGame";
+import useWords from "./hooks/useWords";
+import useKeyboardListener from "./hooks/useKeyboardListener";
 
 const App = () => {
-  const [isSolved, setSolved] = useState(false);
   const { words, error, isLoading } = useWords();
   const word = words.length > 0 ? words[0].word : "";
-  const grid = [
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-  ];
+
+  const { grid, handleKeyPress, isSolved, isGameOver } = useGame(word);
+
+  useKeyboardListener(handleKeyPress, isSolved || isGameOver);
 
   return (
     <Flex direction="column" minH="100vh">
@@ -43,8 +40,8 @@ const App = () => {
         </Box>
 
         <Keyboard
-          disabled={isLoading}
-          onPress={(value) => console.log(value)}
+          disabled={isLoading || isSolved || isGameOver}
+          onPress={handleKeyPress}
         />
       </Flex>
 

@@ -13,7 +13,7 @@ const GameGrid = ({ spacing = "5px", grid }: Props) => {
       {grid.map((gRow, i) => (
         <React.Fragment key={`row-${i}`}>
           {gRow.map((gCol, j) => (
-            <GameCell key={`cell-${i}-${j}`}></GameCell>
+            <GameCell key={`cell-${i}-${j}`}>{grid[i][j]}</GameCell>
           ))}
         </React.Fragment>
       ))}

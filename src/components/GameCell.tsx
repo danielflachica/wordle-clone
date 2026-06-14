@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, BoxProps, Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface Props extends BoxProps {
@@ -10,15 +10,16 @@ const GameCell = ({ children, ...props }: Props) => {
     <Box
       borderWidth="1px"
       borderColor="border.disabled"
-      color="white"
+      // color="white"
       height="50px"
       fontWeight="black"
       padding={2}
-      textAlign="center"
       textTransform="uppercase"
       {...props}
     >
-      {children}
+      <Flex alignItems="center" justifyContent="center" h="100%">
+        {children}
+      </Flex>
     </Box>
   );
 };
