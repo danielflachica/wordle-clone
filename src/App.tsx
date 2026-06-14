@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Box, Center, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import useWords from "./hooks/useWords";
 import Keyboard from "./components/Keyboard";
+import GameGrid from "./components/GameGrid";
 
 const App = () => {
   const [isSolved, setSolved] = useState(false);
@@ -14,21 +15,27 @@ const App = () => {
     <Flex direction="column" minH="100vh">
       <Navbar />
 
-      <Box as="main" flex="1">
-        <Center>
-          {error ? (
-            <Text color="red">{error}</Text>
-          ) : (
-            <Text>
-              Word: {isLoading && <Spinner size="sm" />} {word}
-            </Text>
-          )}
-        </Center>
-
-        <Box h="100px">{/* Game Grid */}</Box>
+      <Flex
+        as="main"
+        direction="column"
+        flex="1"
+        justifyContent="space-between"
+      >
+        <Box p={4}>
+          <Box textAlign="center" mb={3}>
+            {error ? (
+              <Text color="red">{error}</Text>
+            ) : (
+              <Text>
+                Word: {isLoading && <Spinner size="sm" />} {word}
+              </Text>
+            )}
+          </Box>
+          <GameGrid />
+        </Box>
 
         <Keyboard disabled={isLoading} />
-      </Box>
+      </Flex>
 
       <Footer />
     </Flex>

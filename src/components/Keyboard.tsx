@@ -44,7 +44,7 @@ const Keyboard = ({ spacing = "5px", disabled = false }: Props) => {
       </GridItem>
       <GridItem>
         <HStack gap={spacing} justify="center">
-          <Key disabled={disabled}>
+          <Key disabled={disabled} px={3}>
             <IoEnterOutline />
           </Key>
           <Key disabled={disabled}>Z</Key>
@@ -54,7 +54,7 @@ const Keyboard = ({ spacing = "5px", disabled = false }: Props) => {
           <Key disabled={disabled}>B</Key>
           <Key disabled={disabled}>N</Key>
           <Key disabled={disabled}>M</Key>
-          <Key disabled={disabled}>
+          <Key disabled={disabled} px={3}>
             <IoBackspaceOutline />
           </Key>
         </HStack>

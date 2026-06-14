@@ -7,7 +7,14 @@ interface Props extends ButtonProps {
 
 const Key = ({ children, ...props }: Props) => {
   return (
-    <Button size="xs" textTransform="uppercase" variant="surface" {...props}>
+    <Button
+      size="xs"
+      px={0}
+      py={5}
+      textTransform="uppercase"
+      variant="surface"
+      {...props}
+    >
       {children}
     </Button>
   );
