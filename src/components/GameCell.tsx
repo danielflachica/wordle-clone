@@ -27,7 +27,7 @@ const GameCell = ({ children, state, ...props }: Props) => {
         state ? bgColor : children ? "gray.500/50" : "border.disabled"
       }
       background={bgColor}
-      // color="white"
+      color={state ? "white" : ""}
       height="50px"
       fontWeight="black"
       padding={2}

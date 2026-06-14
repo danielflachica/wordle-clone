@@ -29,12 +29,12 @@ const App = () => {
         flex="1"
         justifyContent="space-between"
       >
-        <Box p={4}>
+        <Box px={4} pb={4} pt={0}>
           <Box textAlign="center" mb={3}>
-            {error ? (
-              <Text color="red">{error}</Text>
-            ) : (
-              <Text>
+            {error && <Text color="red">{error}</Text>}
+            {/* TO-DO: Replace true with isGameOver */}
+            {true && (
+              <Text fontWeight="bold">
                 Word: {isLoading && <Spinner size="sm" />} {word}
               </Text>
             )}

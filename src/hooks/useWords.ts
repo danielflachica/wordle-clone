@@ -32,6 +32,7 @@ const useWords = () => {
       .then((res) => {
         setWords(res.data);
         setLoading(false);
+        console.log(res.data[0]);
       })
       .catch((err) => {
         if (err instanceof CanceledError) return;
