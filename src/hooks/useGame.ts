@@ -1,6 +1,22 @@
 import { useState } from "react";
 import { Toast } from "./useToastListener";
 
+interface Game {
+  activeRow: number;
+  activeCol: number;
+  isSolved: boolean;
+  isGameOver: boolean;
+  toast: Toast;
+}
+
+const initialGameState: Game = {
+  activeRow: 0,
+  activeCol: 0,
+  isSolved: false,
+  isGameOver: false,
+  toast: { message: "", type: "info" },
+};
+
 const initialGrid = [
   ["", "", "", "", ""],
   ["", "", "", "", ""],
@@ -15,15 +31,13 @@ const evaluateRow = (guess: string, word: string) => {
 };
 
 const useGame = (word: string) => {
+  const [game, setGame] = useState<Game>(initialGameState);
   const [grid, setGrid] = useState<string[][]>(initialGrid);
-  const [activeRow, setActiveRow] = useState(0);
-  const [activeCol, setActiveCol] = useState(0);
-  const [isSolved, setSolved] = useState(false);
-  const [isGameOver, setGameOver] = useState(false);
-  const [toast, setToast] = useState<Toast>({} as Toast);
-  // convert above into game object
 
   const handleKeyPress = (key: string) => {
+    // Destructure Game object
+    const { activeRow, activeCol, isSolved, isGameOver, toast } = game;
+
     // Game over
     if (isSolved || isGameOver || activeRow === grid.length) return;
 
@@ -31,55 +45,68 @@ const useGame = (word: string) => {
     const activeGrid = grid.map((row) => [...row]);
     const currentGuess = activeGrid[activeRow].join("");
 
-    // Reset message
-    setToast({ ...toast, message: "" });
+    // Reset toast message
+    const emptyToast: Toast = { ...toast, message: "" };
 
-    // console.log(key, activeRow.toString(), activeCol.toString());
-
-    // Player types a valid Letter
+    // CASE 1: Player types a valid Letter
     if (/^[A-Z]$/.test(key) && activeCol < word.length) {
       activeGrid[activeRow][activeCol] = key;
       setGrid(activeGrid);
-      setActiveCol(activeCol + 1);
+      setGame({ ...game, activeCol: activeCol + 1, toast: emptyToast });
     }
 
-    // Player erases a letter
+    // CASE 2: Player erases a letter
     if (key === "BACKSPACE" && activeCol > 0) {
       activeGrid[activeRow][activeCol - 1] = "";
       setGrid(activeGrid);
-      setActiveCol(activeCol - 1);
+      setGame({ ...game, activeCol: activeCol - 1, toast: emptyToast });
     }
 
-    // Player submits a guess
+    // CASE 3: Player submits a word guess
     if (key === "ENTER") {
+      // Short guess
       if (currentGuess.length < word.length) {
-        setToast({ ...toast, message: "Word is too short!", type: "info" });
-        return;
-      }
-
-      if (currentGuess.toUpperCase() === word.toUpperCase()) {
-        setSolved(true);
-        setToast({ ...toast, message: "You win!", type: "success" });
-        return;
-      }
-
-      if (activeRow === activeGrid.length - 1) {
-        setGameOver(true);
-        setToast({
-          ...toast,
-          message: `You lost! The word was ${word}`,
-          type: "error",
+        setGame({
+          ...game,
+          toast: { message: "Word is too short!", type: "info" },
         });
         return;
       }
 
-      // Move to next row
-      setActiveRow(activeRow + 1);
-      setActiveCol(0);
+      // Correct guess
+      if (currentGuess.toUpperCase() === word.toUpperCase()) {
+        setGame({
+          ...game,
+          isSolved: true,
+          toast: { message: "You win!", type: "success" },
+        });
+        return;
+      }
+
+      // Wrong guess, game over
+      if (activeRow === activeGrid.length - 1) {
+        setGame({
+          ...game,
+          isGameOver: true,
+          toast: {
+            message: `You lost! The word was ${word}`,
+            type: "error",
+          },
+        });
+        return;
+      }
+
+      // Wrong guess, move to next row
+      setGame({
+        ...game,
+        activeRow: activeRow + 1,
+        activeCol: 0,
+        toast: emptyToast,
+      });
     }
   };
 
-  return { grid, handleKeyPress, isSolved, isGameOver, toast };
+  return { game, grid, handleKeyPress };
 };
 
 export default useGame;

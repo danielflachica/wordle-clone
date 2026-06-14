@@ -13,7 +13,8 @@ const App = () => {
   const { words, error, isLoading } = useWords();
   const word = words.length > 0 ? words[0].word : "";
 
-  const { grid, handleKeyPress, isSolved, isGameOver, toast } = useGame(word);
+  const { game, grid, handleKeyPress } = useGame(word);
+  const { isSolved, isGameOver, toast } = game;
 
   useKeyboardListener(handleKeyPress, isSolved || isGameOver);
   useToastListener(toast);
