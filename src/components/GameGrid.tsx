@@ -1,10 +1,10 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import GameCell from "./GameCell";
+import GameCell, { Cell } from "./GameCell";
 import React from "react";
 
 interface Props {
   spacing?: string | number;
-  grid: string[][];
+  grid: Cell[][];
 }
 
 const GameGrid = ({ spacing = "5px", grid }: Props) => {
@@ -13,7 +13,9 @@ const GameGrid = ({ spacing = "5px", grid }: Props) => {
       {grid.map((gRow, i) => (
         <React.Fragment key={`row-${i}`}>
           {gRow.map((gCol, j) => (
-            <GameCell key={`cell-${i}-${j}`}>{grid[i][j]}</GameCell>
+            <GameCell key={`cell-${i}-${j}`} state={grid[i][j].state}>
+              {grid[i][j].value}
+            </GameCell>
           ))}
         </React.Fragment>
       ))}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Toast } from "./useToastListener";
+import { Cell } from "@/components/GameCell";
 
 interface Game {
   activeRow: number;
@@ -17,14 +18,10 @@ const initialGameState: Game = {
   toast: { message: "", type: "info" },
 };
 
-const initialGrid = [
-  ["", "", "", "", ""],
-  ["", "", "", "", ""],
-  ["", "", "", "", ""],
-  ["", "", "", "", ""],
-  ["", "", "", "", ""],
-  ["", "", "", "", ""],
-];
+// 2D Matrix of Cell objects (6 x 5 grid)
+const initialGrid: Cell[][] = Array.from({ length: 6 }, () =>
+  Array.from({ length: 5 }, () => ({ value: "", state: null }))
+);
 
 const evaluateRow = (guess: string, word: string) => {
   return guess === word;
@@ -32,7 +29,7 @@ const evaluateRow = (guess: string, word: string) => {
 
 const useGame = (word: string) => {
   const [game, setGame] = useState<Game>(initialGameState);
-  const [grid, setGrid] = useState<string[][]>(initialGrid);
+  const [grid, setGrid] = useState<Cell[][]>(initialGrid);
 
   const handleKeyPress = (key: string) => {
     // Destructure Game object
@@ -42,22 +39,26 @@ const useGame = (word: string) => {
     if (isSolved || isGameOver || activeRow === grid.length) return;
 
     // Create new grid (don't mutate original grid)
-    const activeGrid = grid.map((row) => [...row]);
-    const currentGuess = activeGrid[activeRow].join("");
+    const activeGrid = grid.map((row) => row.map((cell) => ({ ...cell })));
 
-    // Reset toast message
+    // Extract current guess based on active row
+    const currentGuess = activeGrid[activeRow]
+      .map((cell) => cell.value)
+      .join("");
+
+    // Reusable "empty" toast message
     const emptyToast: Toast = { ...toast, message: "" };
 
     // CASE 1: Player types a valid Letter
     if (/^[A-Z]$/.test(key) && activeCol < word.length) {
-      activeGrid[activeRow][activeCol] = key;
+      activeGrid[activeRow][activeCol].value = key;
       setGrid(activeGrid);
       setGame({ ...game, activeCol: activeCol + 1, toast: emptyToast });
     }
 
     // CASE 2: Player erases a letter
     if (key === "BACKSPACE" && activeCol > 0) {
-      activeGrid[activeRow][activeCol - 1] = "";
+      activeGrid[activeRow][activeCol - 1].value = "";
       setGrid(activeGrid);
       setGame({ ...game, activeCol: activeCol - 1, toast: emptyToast });
     }
@@ -73,12 +74,42 @@ const useGame = (word: string) => {
         return;
       }
 
+      // Correct length, assign colors to cells
+      const answerArray = word.toUpperCase().split("");
+      // Loop 1: Mark all correct matches first
+      for (let i = 0; i < activeGrid[activeRow].length; i++) {
+        const guess = activeGrid[activeRow][i].value.toUpperCase();
+
+        if (guess === answerArray[i]) {
+          activeGrid[activeRow][i].state = "correct";
+          answerArray[i] = "_"; // Placeholder: locks this letter out from yellow checks
+        }
+      }
+
+      // Loop 2: Rescan for yellow/gray letters
+      for (let i = 0; i < activeGrid[activeRow].length; i++) {
+        // Skip cells we already marked correct in Loop 1
+        if (activeGrid[activeRow][i].state === "correct") continue;
+
+        const guess = activeGrid[activeRow][i].value.toUpperCase();
+        const targetIndex = answerArray.indexOf(guess);
+
+        // If the letter exists anywhere else in answerArray, mark as yellow
+        if (targetIndex !== -1) {
+          activeGrid[activeRow][i].state = "present";
+          answerArray[targetIndex] = "_"; // Consume this specific character instance
+        } else {
+          activeGrid[activeRow][i].state = "absent";
+        }
+      }
+      setGrid(activeGrid);
+
       // Correct guess
       if (currentGuess.toUpperCase() === word.toUpperCase()) {
         setGame({
           ...game,
           isSolved: true,
-          toast: { message: "You win!", type: "success" },
+          toast: { message: "You guessed it!", type: "success" },
         });
         return;
       }
