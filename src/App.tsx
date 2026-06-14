@@ -10,6 +10,14 @@ const App = () => {
   const [isSolved, setSolved] = useState(false);
   const { words, error, isLoading } = useWords();
   const word = words.length > 0 ? words[0].word : "";
+  const grid = [
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+  ];
 
   return (
     <Flex direction="column" minH="100vh">
@@ -31,10 +39,13 @@ const App = () => {
               </Text>
             )}
           </Box>
-          <GameGrid />
+          <GameGrid grid={grid} />
         </Box>
 
-        <Keyboard disabled={isLoading} />
+        <Keyboard
+          disabled={isLoading}
+          onPress={(value) => console.log(value)}
+        />
       </Flex>
 
       <Footer />

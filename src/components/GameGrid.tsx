@@ -4,17 +4,10 @@ import React from "react";
 
 interface Props {
   spacing?: string | number;
+  grid: string[][];
 }
 
-const GameGrid = ({ spacing = "5px" }: Props) => {
-  const grid = [
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-  ];
+const GameGrid = ({ spacing = "5px", grid }: Props) => {
   return (
     <SimpleGrid columns={5} gap={spacing} maxW="270px" mx="auto">
       {grid.map((gRow, i) => (
