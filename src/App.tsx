@@ -13,7 +13,7 @@ const App = () => {
   const { words, error, isLoading } = useWords();
   const word = words.length > 0 ? words[0].word : "";
 
-  const { game, grid, handleKeyPress } = useGame(word);
+  const { game, grid, letterMap, handleKeyPress } = useGame(word);
   const { isSolved, isGameOver, toast } = game;
 
   useKeyboardListener(handleKeyPress, isSolved || isGameOver);
@@ -44,6 +44,7 @@ const App = () => {
 
         <Keyboard
           disabled={isLoading || isSolved || isGameOver}
+          letterMap={letterMap}
           onPress={handleKeyPress}
         />
       </Flex>

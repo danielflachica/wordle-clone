@@ -19,10 +19,6 @@ const initialGameState: Game = {
   toast: { message: "", type: "info" },
 };
 
-const evaluateRow = (guess: string, word: string) => {
-  return guess === word;
-};
-
 const useGame = (word: string) => {
   const [game, setGame] = useState<Game>(initialGameState);
   const [grid, setGrid] = useState<Letter[][]>(
@@ -30,6 +26,13 @@ const useGame = (word: string) => {
     Array.from({ length: 6 }, () =>
       Array.from({ length: 5 }, () => ({ value: "", state: null }))
     )
+  );
+  const [letterMap, setLetterMap] = useState<Letter[]>(
+    // [{'A', null}, {'B', null}, ..., {'Z', null}]
+    Array.from({ length: 26 }, (_, i) => ({
+      value: String.fromCharCode(65 + i),
+      state: null,
+    }))
   );
 
   const handleKeyPress = (key: string) => {
@@ -39,8 +42,9 @@ const useGame = (word: string) => {
     // Game over
     if (isSolved || isGameOver || activeRow === grid.length) return;
 
-    // Create new grid (don't mutate original grid)
+    // Create new grid and letterMap (don't mutate original objects)
     const activeGrid = grid.map((row) => row.map((cell) => ({ ...cell })));
+    const activeLetters = letterMap.map((letter) => ({ ...letter }));
 
     // Extract current guess based on active row
     const currentGuess = activeGrid[activeRow]
@@ -70,7 +74,7 @@ const useGame = (word: string) => {
       if (currentGuess.length < word.length) {
         setGame({
           ...game,
-          toast: { message: "Word is too short!", type: "info" },
+          toast: { message: "Not enough letters!", type: "info" },
         });
         return;
       }
@@ -84,18 +88,19 @@ const useGame = (word: string) => {
         return;
       }
 
-      // Correct length, assign colors to cells
+      // Correct length, assign colors to cells and keyboard
       const answerArray = word.toUpperCase().split("");
       // Loop 1: Mark all correct matches first
       for (let i = 0; i < activeGrid[activeRow].length; i++) {
         const guess = activeGrid[activeRow][i].value.toUpperCase();
+        const letterIndex = letterMap.findIndex((l) => l.value === guess);
 
         if (guess === answerArray[i]) {
           activeGrid[activeRow][i].state = "correct";
+          activeLetters[letterIndex].state = "correct";
           answerArray[i] = "_"; // Placeholder: locks this letter out from yellow checks
         }
       }
-
       // Loop 2: Rescan for yellow/gray letters
       for (let i = 0; i < activeGrid[activeRow].length; i++) {
         // Skip cells we already marked correct in Loop 1
@@ -103,16 +108,26 @@ const useGame = (word: string) => {
 
         const guess = activeGrid[activeRow][i].value.toUpperCase();
         const targetIndex = answerArray.indexOf(guess);
+        const letterIndex = letterMap.findIndex((l) => l.value === guess);
 
         // If the letter exists anywhere else in answerArray, mark as yellow
-        if (targetIndex !== -1) {
-          activeGrid[activeRow][i].state = "present";
-          answerArray[targetIndex] = "_"; // Consume this specific character instance
-        } else {
-          activeGrid[activeRow][i].state = "absent";
+        const letterIsPresent = targetIndex !== -1;
+        const letterState = letterIsPresent ? "present" : "absent";
+
+        activeGrid[activeRow][i].state = letterState;
+        // if letter on keyboard is already correct, don't mark it as present/absent anymore
+        if (activeLetters[letterIndex].state !== "correct") {
+          activeLetters[letterIndex].state = letterState;
+        }
+        // Consume this specific character instance
+        if (letterIsPresent) {
+          answerArray[targetIndex] = "_";
         }
       }
+
+      // Bundle updates to grid and letterMap state
       setGrid(activeGrid);
+      setLetterMap(activeLetters);
 
       // Correct guess
       if (currentGuess.toUpperCase() === word.toUpperCase()) {
@@ -147,7 +162,7 @@ const useGame = (word: string) => {
     }
   };
 
-  return { game, grid, handleKeyPress };
+  return { game, grid, letterMap, handleKeyPress };
 };
 
 export default useGame;
