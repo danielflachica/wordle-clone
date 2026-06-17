@@ -10,7 +10,7 @@ interface Props {
 
 const GameGrid = ({ spacing = "5px", grid }: Props) => {
   return (
-    <SimpleGrid columns={5} gap={spacing} maxW="270px" mx="auto">
+    <SimpleGrid columns={5} gap={spacing} maxW="320px" mx="auto">
       {grid.map((gRow, i) => (
         <React.Fragment key={`row-${i}`}>
           {gRow.map((gCol, j) => (

@@ -20,7 +20,7 @@ const App = () => {
   useToastListener(toast);
 
   return (
-    <Flex direction="column" minH="100vh">
+    <Flex direction="column" minH="100dvh" bg="bg.subtle">
       <Navbar />
 
       <Flex

@@ -16,8 +16,9 @@ const GameCell = ({ children, state, ...props }: Props) => {
       borderColor={state ? bgColor : children ? "border.emphasized" : "border"}
       background={bgColor}
       color={state ? "white" : ""}
-      height="50px"
-      fontWeight="black"
+      height="60px"
+      fontSize={22}
+      fontWeight="bold"
       padding={2}
       textTransform="uppercase"
       {...props}

@@ -110,18 +110,23 @@ const useGame = (word: string) => {
         const targetIndex = answerArray.indexOf(guess);
         const letterIndex = letterMap.findIndex((l) => l.value === guess);
 
-        // If the letter exists anywhere else in answerArray, mark as yellow
-        const letterIsPresent = targetIndex !== -1;
-        const letterState = letterIsPresent ? "present" : "absent";
-
-        activeGrid[activeRow][i].state = letterState;
-        // if letter on keyboard is already correct, don't mark it as present/absent anymore
-        if (activeLetters[letterIndex].state !== "correct") {
-          activeLetters[letterIndex].state = letterState;
-        }
-        // Consume this specific character instance
-        if (letterIsPresent) {
+        // If the letter exists anywhere else in answerArray, mark as present (yellow)
+        if (targetIndex !== -1) {
+          activeGrid[activeRow][i].state = "present";
+          // Only update keyboard to yellow if it isn't already green
+          if (activeLetters[letterIndex].state !== "correct") {
+            activeLetters[letterIndex].state = "present";
+          }
+          // Consume this specific character instance
           answerArray[targetIndex] = "_";
+        }
+        // Handle absent (gray) letters
+        else {
+          activeGrid[activeRow][i].state = "absent";
+          // Only update keyboard to gray if it has no state yet (present, correct)
+          if (activeLetters[letterIndex].state === null) {
+            activeLetters[letterIndex].state = "absent";
+          }
         }
       }
 
