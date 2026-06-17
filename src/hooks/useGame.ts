@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Toast } from "./useToastListener";
 import { Cell } from "@/components/GameCell";
+import { isValidWord } from "@/utils/dictionary";
 
 interface Game {
   activeRow: number;
@@ -18,18 +19,18 @@ const initialGameState: Game = {
   toast: { message: "", type: "info" },
 };
 
-// 2D Matrix of Cell objects (6 x 5 grid)
-const initialGrid: Cell[][] = Array.from({ length: 6 }, () =>
-  Array.from({ length: 5 }, () => ({ value: "", state: null }))
-);
-
 const evaluateRow = (guess: string, word: string) => {
   return guess === word;
 };
 
 const useGame = (word: string) => {
   const [game, setGame] = useState<Game>(initialGameState);
-  const [grid, setGrid] = useState<Cell[][]>(initialGrid);
+  const [grid, setGrid] = useState<Cell[][]>(
+    // 2D Matrix of Cell objects (6 x 5 grid)
+    Array.from({ length: 6 }, () =>
+      Array.from({ length: 5 }, () => ({ value: "", state: null }))
+    )
+  );
 
   const handleKeyPress = (key: string) => {
     // Destructure Game object
@@ -70,6 +71,15 @@ const useGame = (word: string) => {
         setGame({
           ...game,
           toast: { message: "Word is too short!", type: "info" },
+        });
+        return;
+      }
+
+      // Invalid guess (not a real word)
+      if (!isValidWord(currentGuess)) {
+        setGame({
+          ...game,
+          toast: { message: "Not a word!", type: "info" },
         });
         return;
       }
