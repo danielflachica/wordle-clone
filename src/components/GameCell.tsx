@@ -1,24 +1,14 @@
 import { Box, BoxProps, Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
+import { LetterState, getBgColor } from "@/types/letter";
 
 interface Props extends BoxProps {
   children?: ReactNode;
-  state?: "absent" | "present" | "correct" | null;
-}
-
-export interface Cell {
-  value: string;
-  state: "absent" | "present" | "correct" | null;
+  state?: LetterState;
 }
 
 const GameCell = ({ children, state, ...props }: Props) => {
-  const bgColor = state
-    ? state === "correct"
-      ? "green"
-      : state === "present"
-      ? "yellow.600"
-      : "gray"
-    : "none";
+  const bgColor = getBgColor(state);
 
   return (
     <Box

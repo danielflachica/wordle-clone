@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Toast } from "./useToastListener";
-import { Cell } from "@/components/GameCell";
+import { Letter } from "@/types/letter";
 import { isValidWord } from "@/utils/dictionary";
 
 interface Game {
@@ -25,8 +25,8 @@ const evaluateRow = (guess: string, word: string) => {
 
 const useGame = (word: string) => {
   const [game, setGame] = useState<Game>(initialGameState);
-  const [grid, setGrid] = useState<Cell[][]>(
-    // 2D Matrix of Cell objects (6 x 5 grid)
+  const [grid, setGrid] = useState<Letter[][]>(
+    // 2D Matrix of Letters (6 x 5 grid)
     Array.from({ length: 6 }, () =>
       Array.from({ length: 5 }, () => ({ value: "", state: null }))
     )

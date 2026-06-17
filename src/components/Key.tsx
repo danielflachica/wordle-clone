@@ -1,13 +1,15 @@
 import { Button, ButtonProps } from "@chakra-ui/react";
 import { ReactNode } from "react";
+import { LetterState, getBgColor } from "@/types/letter";
 
 interface Props extends ButtonProps {
   children: ReactNode;
+  state?: LetterState;
   value?: string;
   onPress: (value: string) => void;
 }
 
-const Key = ({ children, value, onPress, ...props }: Props) => {
+const Key = ({ children, state, value, onPress, ...props }: Props) => {
   const handlePress = () => {
     const pressed = value || children?.toString() || "";
     onPress(pressed);
@@ -15,6 +17,8 @@ const Key = ({ children, value, onPress, ...props }: Props) => {
 
   return (
     <Button
+      background={getBgColor(state)}
+      color={state ? "white" : ""}
       size="xs"
       px={0}
       py={5}
