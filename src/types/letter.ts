@@ -6,9 +6,9 @@ export interface Letter {
 }
 
 const letterColors: Record<Exclude<LetterState, null>, string> = {
-  correct: "green",
-  present: "yellow.600",
-  absent: "gray",
+  correct: "green.solid",
+  present: "yellow.focusRing",
+  absent: "bg.emphasized",
 };
 
 export const getBgColor = (state: LetterState | undefined): string => {

@@ -13,9 +13,7 @@ const GameCell = ({ children, state, ...props }: Props) => {
   return (
     <Box
       borderWidth="1px"
-      borderColor={
-        state ? bgColor : children ? "gray.500/50" : "border.disabled"
-      }
+      borderColor={state ? bgColor : children ? "border.emphasized" : "border"}
       background={bgColor}
       color={state ? "white" : ""}
       height="50px"
