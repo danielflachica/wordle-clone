@@ -1,4 +1,4 @@
-import { Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Spinner, Text, VStack } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -32,11 +32,15 @@ const App = () => {
         <Box px={4} pb={4} pt={0}>
           <Box textAlign="center" mb={3}>
             {error && <Text color="red">{error}</Text>}
-            {/* TO-DO: Replace true with isGameOver */}
-            {true && (
-              <Text fontWeight="bold">
-                Word: {isLoading && <Spinner size="sm" />} {word}
-              </Text>
+            {isLoading && (
+              <Box pos="absolute" inset="0" bg="bg/80">
+                <Center h="full">
+                  <VStack>
+                    <Spinner />
+                    <Text>Fetching word...</Text>
+                  </VStack>
+                </Center>
+              </Box>
             )}
           </Box>
           <GameGrid grid={grid} />

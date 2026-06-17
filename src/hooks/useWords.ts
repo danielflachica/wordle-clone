@@ -37,6 +37,7 @@ const useWords = () => {
           const data = res.data;
           const response = <Word>data[0];
 
+          // Ensure the fetched word exists in the local answer key (from dictionary)
           if (response && isValidAnswer(response.word.toLowerCase())) {
             setWords(data);
             setLoading(false);
@@ -56,19 +57,18 @@ const useWords = () => {
             console.error(
               "Max API retries reached. Falling back to local word list."
             );
-            const localRandomWord =
-              wordleDictionary.answerKey[
-                Math.floor(Math.random() * wordleDictionary.answerKey.length)
-              ].toUpperCase();
 
-            setWords([
-              {
-                category: "local-fallback",
-                language: "en",
-                length: 5,
-                word: localRandomWord,
-              },
-            ]);
+            const localRandomWord = {
+              category: "local-fallback",
+              language: "en",
+              length: 5,
+              word: wordleDictionary.answerKey[
+                Math.floor(Math.random() * wordleDictionary.answerKey.length)
+              ].toUpperCase(),
+            };
+
+            setWords([localRandomWord]);
+            console.log(localRandomWord);
             setLoading(false);
           }
         })
