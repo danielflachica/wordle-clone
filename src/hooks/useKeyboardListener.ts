@@ -5,6 +5,9 @@ type KeyCallback = (key: string) => void;
 const useKeyboardListener = (onPress: KeyCallback, disabled: boolean) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Ignore ctrl/cmd key combos
+      if (event.metaKey || event.ctrlKey) return;
+
       const key = event.key.toUpperCase();
       if (
         !disabled &&
