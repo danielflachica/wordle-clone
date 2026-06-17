@@ -1,5 +1,6 @@
 import apiClient, { CanceledError } from "@/services/apiClient";
 import { useEffect, useState } from "react";
+import wordleDictionary, { isValidAnswer } from "@/utils/dictionary";
 
 export interface Word {
   category: string;
@@ -15,30 +16,70 @@ const useWords = () => {
 
   useEffect(() => {
     const controller = new AbortController();
+    const requestLimit = 5;
+    let attempts = 0;
 
     setLoading(true);
 
-    apiClient
-      .get("", {
-        signal: controller.signal,
-        params: {
-          category: "wordle",
-          language: "en",
-          length: 5,
-          type: "uppercase",
-          words: 1,
-        },
-      })
-      .then((res) => {
-        setWords(res.data);
-        setLoading(false);
-        console.log(res.data[0]);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-        setError(err.message);
-        setLoading(false);
-      });
+    const fetchValidWord = () => {
+      apiClient
+        .get("", {
+          signal: controller.signal,
+          params: {
+            category: "wordle",
+            language: "en",
+            length: 5,
+            type: "uppercase",
+            words: 1,
+          },
+        })
+        .then((res) => {
+          const data = res.data;
+          const response = <Word>data[0];
+
+          if (response && isValidAnswer(response.word.toLowerCase())) {
+            setWords(data);
+            setLoading(false);
+            console.log(response);
+            return;
+          }
+
+          if (attempts < requestLimit) {
+            attempts++;
+            console.warn(`${response.word} is not a valid Wordle answer`);
+
+            // Recursive call until a valid answer is returned
+            setTimeout(() => {
+              if (!controller.signal.aborted) fetchValidWord();
+            }, 300);
+          } else {
+            console.error(
+              "Max API retries reached. Falling back to local word list."
+            );
+            const localRandomWord =
+              wordleDictionary.answerKey[
+                Math.floor(Math.random() * wordleDictionary.answerKey.length)
+              ].toUpperCase();
+
+            setWords([
+              {
+                category: "local-fallback",
+                language: "en",
+                length: 5,
+                word: localRandomWord,
+              },
+            ]);
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          if (err instanceof CanceledError) return;
+          setError(err.message);
+          setLoading(false);
+        });
+    };
+
+    fetchValidWord();
 
     return () => controller.abort();
   }, []);
