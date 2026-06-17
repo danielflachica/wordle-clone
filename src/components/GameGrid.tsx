@@ -1,10 +1,11 @@
 import { SimpleGrid } from "@chakra-ui/react";
-import GameCell, { Cell } from "./GameCell";
+import { Letter } from "@/types/letter";
+import GameCell from "./GameCell";
 import React from "react";
 
 interface Props {
   spacing?: string | number;
-  grid: Cell[][];
+  grid: Letter[][];
 }
 
 const GameGrid = ({ spacing = "5px", grid }: Props) => {
