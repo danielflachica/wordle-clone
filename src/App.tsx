@@ -1,9 +1,11 @@
-import { Box, Center, Flex, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Keyboard from "./components/Keyboard";
 import GameGrid from "./components/GameGrid";
+import Loader from "./components/Loader";
+import ButtonRestart from "./components/ButtonRestart";
 import useGame from "./hooks/useGame";
 import useWords from "./hooks/useWords";
 import useKeyboardListener from "./hooks/useKeyboardListener";
@@ -14,7 +16,7 @@ const App = () => {
   const word = words.length > 0 ? words[0].word : "";
 
   const { game, grid, letterMap, handleKeyPress } = useGame(word);
-  const { isSolved, isGameOver, toast } = game;
+  const { isSolved, isGameOver, canRestart, toast } = game;
 
   useKeyboardListener(handleKeyPress, isSolved || isGameOver);
   useToastListener(toast);
@@ -32,16 +34,8 @@ const App = () => {
         <Box px={4} pb={4} pt={0}>
           <Box textAlign="center" mb={3}>
             {error && <Text color="red">{error}</Text>}
-            {isLoading && (
-              <Box pos="absolute" inset="0" bg="bg/80">
-                <Center h="full">
-                  <VStack>
-                    <Spinner />
-                    <Text>Fetching word...</Text>
-                  </VStack>
-                </Center>
-              </Box>
-            )}
+            {isLoading && <Loader />}
+            {canRestart && <ButtonRestart />}
           </Box>
           <GameGrid grid={grid} />
         </Box>

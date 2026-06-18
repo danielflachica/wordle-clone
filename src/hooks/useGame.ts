@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Toast } from "./useToastListener";
 import { Letter } from "@/types/letter";
 import { isValidWord } from "@/utils/dictionary";
@@ -8,6 +8,7 @@ interface Game {
   activeCol: number;
   isSolved: boolean;
   isGameOver: boolean;
+  canRestart: boolean;
   toast: Toast;
 }
 
@@ -16,6 +17,7 @@ const initialGameState: Game = {
   activeCol: 0,
   isSolved: false,
   isGameOver: false,
+  canRestart: false,
   toast: { message: "", type: "info" },
 };
 
@@ -166,6 +168,19 @@ const useGame = (word: string) => {
       });
     }
   };
+
+  useEffect(() => {
+    let timeoutID = -1;
+    if (game.isSolved || game.isGameOver) {
+      timeoutID = setTimeout(() => {
+        setGame({
+          ...game,
+          canRestart: true,
+        });
+      }, 2000);
+    }
+    return () => clearTimeout(timeoutID);
+  }, [game.isSolved, game.isGameOver]);
 
   return { game, grid, letterMap, handleKeyPress };
 };
